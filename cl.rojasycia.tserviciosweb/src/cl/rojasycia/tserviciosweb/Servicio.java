@@ -36,8 +36,8 @@ public class Servicio {
   // This method is called if XML is request
   @GET
   @Produces(MediaType.TEXT_XML)
-  public List<Poi> sayXMLHello() {
-	  String driver = "org.postgresql.Driver"; 
+  public List<Poi> sayXMLPOI() {
+	  	String driver = "org.postgresql.Driver"; 
 	    String connectString = "jdbc:postgresql://localhost:5432/gis?user=postgres&password=postgres"; 
 	    String sql;
 	    ResultSet resultado;
@@ -81,9 +81,56 @@ public class Servicio {
   // This method is called if HTML is request
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String sayHtmlHello() {
-    return "<html> " + "<title>" + "Hello" + "</title>"
-        + "<body><h1>" + "Hello World (:" + "</body></h1>" + "</html> ";
+  public String sayHtmlPOI() {
+	  String driver = "org.postgresql.Driver"; 
+	  String connectString = "jdbc:postgresql://localhost:5432/gis?user=postgres&password=postgres"; 
+	  String sql;
+	  ResultSet resultado;
+	  Connection conn;
+	  Statement sentencia;
+	  
+	    try {
+	    	StringBuilder sb = new StringBuilder();
+	    	sb.append("<html> " 
+	    			+ "<title>" 
+	    			+ "Puntos de Interes" 
+	    			+ "</title>" 
+	    			+ "<body>");
+	    	Class.forName(driver);
+	    	System.out.println("class ok");
+	    	conn = DriverManager.getConnection(connectString);
+	    	System.out.println("conn ok");
+	    	sql = "SELECT id as id, ST_X(the_geom) as lon, ST_Y(the_geom) as lat, nombre as nombre, tipo as tipo FROM poi ORDER BY the_geom <-> ST_MakePoint( -32 , -71) ;";
+	    	System.out.println("sql ok");
+	    	sentencia = conn.createStatement();
+	    	System.out.println("sentencia ok");
+	    	resultado = sentencia.executeQuery(sql);
+	    
+	    	while(resultado.next()){
+	    		sb.append("<h1>"+ resultado.getString("nombre") + "</h1>"
+	    				+ resultado.getDouble("lon")
+	    				+ resultado.getDouble("lat")
+	    				+ resultado.getString("tipo")
+	    				+ "<br>");
+	    	}
+	    
+	    	resultado.close();
+	    	sentencia.close();
+	    	conn.close();
+	    	
+	    	sb.append("</body>" + "</html> ");
+	    
+	    	return sb.toString();
+	            
+	    }
+	    catch(SQLException  e) {
+	    	System.out.println("Error en SQL");
+	    }
+	    catch(ClassNotFoundException e) {
+	    	System.out.println("Error en ClassNotFound");
+	    }
+	    return null;
+
   }
   
   @POST

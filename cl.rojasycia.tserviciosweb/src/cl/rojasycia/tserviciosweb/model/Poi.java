@@ -24,8 +24,6 @@ public class Poi {
 		super();
 	}
 
-
-
 	public int getId() {
         return id;
     }
