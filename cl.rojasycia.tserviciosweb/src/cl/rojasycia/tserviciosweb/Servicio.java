@@ -1,5 +1,6 @@
 package cl.rojasycia.tserviciosweb;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,21 +9,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import cl.rojasycia.tserviciosweb.model.Poi;
 
-// Plain old Java Object it does not extend as class or implements 
-// an interface
-
-// The class registers its methods for the HTTP GET request using the @GET annotation. 
-// Using the @Produces annotation, it defines that it can deliver several MIME types,
-// text, XML and HTML. 
-
-// The browser requests per default the HTML MIME type.
 
 //Sets the path to base URL + /hello
 @Path("/servicio")
@@ -32,7 +30,7 @@ public class Servicio {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   public String sayPlainTextHello() {
-    return "Hello Jersey";
+    return "Hello World ( :";
   }
 
   // This method is called if XML is request
@@ -84,8 +82,20 @@ public class Servicio {
   @GET
   @Produces(MediaType.TEXT_HTML)
   public String sayHtmlHello() {
-    return "<html> " + "<title>" + "Hello Jersey" + "</title>"
-        + "<body><h1>" + "Hello Jersey" + "</body></h1>" + "</html> ";
+    return "<html> " + "<title>" + "Hello" + "</title>"
+        + "<body><h1>" + "Hello World (:" + "</body></h1>" + "</html> ";
+  }
+  
+  @POST
+  @Produces(MediaType.TEXT_HTML)
+  @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+  public void newTodo(@FormParam("id") String id,
+      @FormParam("summary") String summary,
+      @FormParam("description") String description,
+      @Context HttpServletResponse servletResponse) throws IOException {
+    System.out.println(""+id+" - "+summary+" - "+description);
+    
+    servletResponse.sendRedirect("../NewFile.html");
   }
 
 } 
