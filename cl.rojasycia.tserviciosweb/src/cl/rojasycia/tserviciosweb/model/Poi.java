@@ -6,11 +6,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Poi {
    
-    private int id;
-    private double latitud;
-    private double longitud;
-    private String nombre;
-    private String tipo;
+    protected int id;
+    protected double latitud;
+    protected double longitud;
+    protected String nombre;
+    protected String tipo;
 
     public Poi(int id, double latitud, double longitud, String nombre, String tipo) {
         this.id = id;

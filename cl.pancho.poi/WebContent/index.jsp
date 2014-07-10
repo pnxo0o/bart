@@ -77,6 +77,42 @@
             });
         });
         
+        $(function(ready){
+		    $('.categoria').change(function() {
+		        $("#tipo").empty();
+		        if($(this).val()==1){
+				    $("#tipo").append("<option value=\"1\">UPLA</option>");
+				    $("#tipo").append("<option value=\"2\">UV</option>");
+				    $("#tipo").append("<option value=\"3\">PUCV</option>");
+				    $("#tipo").append("<option value=\"4\">USM</option>");
+		        }
+		        if($(this).val()==2){
+				    $("#tipo").append("<option value=\"5\">CAFETERIA</option>");
+				    $("#tipo").append("<option value=\"6\">COMIDA RAPIDA</option>");
+				    $("#tipo").append("<option value=\"7\">RESTAURANT</option>");
+				    $("#tipo").append("<option value=\"8\">SUPERMERCADO</option>");
+		        }
+		        if($(this).val()==3){
+				    $("#tipo").append("<option value=\"9\">HOSTAL</option>");
+				    $("#tipo").append("<option value=\"10\">HOTEL</option>");
+				    $("#tipo").append("<option value=\"11\">RESIDENCIAL</option>");
+		        }
+		        if($(this).val()==4){
+				    $("#tipo").append("<option value=\"12\">MUSEO</option>");
+				    $("#tipo").append("<option value=\"13\">CINE</option>");
+				    $("#tipo").append("<option value=\"14\">BAR</option>");
+				    $("#tipo").append("<option value=\"15\">DISCO</option>");
+				    $("#tipo").append("<option value=\"16\">EXTERIOR</option>");
+		        }
+		        if($(this).val()==5){
+				    $("#tipo").append("<option value=\"17\">CARABINEROS</option>");
+				    $("#tipo").append("<option value=\"18\">SERVICIO MEDICO</option>");
+				    $("#tipo").append("<option value=\"19\">BOMBEROS</option>");
+				    $("#tipo").append("<option value=\"20\">METRO</option>");
+		        }
+		    });
+		});
+        
       </script>
 </head>
 <% if(session.getAttribute("name")==null || session.getAttribute("name").equals("")) response.sendRedirect("logout.jsp");%>
@@ -90,7 +126,8 @@
 			<div id="menu">
 				<ul>
 					<li class="active"><a href="#" accesskey="1" title="">Añade Lugares</a></li>
-					<li><a href="logout.jsp" accesskey="2" title="">Salir</a></li>
+					<li><a href="modifypoi.jsp" accesskey="2" title="">Modificar Lugares</a></li>
+					<li><a href="logout.jsp" accesskey="3" title="">Salir</a></li>
 				</ul>
 			</div>
 		</div>
@@ -105,18 +142,41 @@
 				<div id="map-canvas" style="height:575px; width:500px"></div>
 			</div>
 			<div class="tbox2">
-				<form action="procesox.jsp" method="post">
-				Lat: 
-				<input type="text" id="textlat" name="lat">
-				Lon: 
-				<input type="text" id="textlon" name="lon">
-				<br/>
-				Nombre: 
-				<input type="text" name="nombre">
-				<br/>
-				Tipo: 
-				<input type="text" name="tipo">
-				<br/>
+				<form action="index_proceso.jsp" method="post">
+				<table border="0" align="center">
+				<tr>
+					<td>Latitud:</td>
+					<td><input type="text" id="textlat" name="lat"></td>
+				</tr>
+				<tr>
+					<td>Longitud:</td>
+					<td><input type="text" id="textlon" name="lon"></td>
+				</tr>
+				<tr>
+					<td>Nombre:</td>
+					<td><input type="text" name="nombre"></td>
+				</tr>
+				<tr>
+					<td>Categoria:</td>
+					<td>
+					<select class="categoria" name="categoria">
+						<option value="" selected="selected"></option>
+						<option value="1">UNIVERSIDADES</option>
+						<option value="2">ALIMENTACION</option>
+						<option value="3">ALOJAMIENTO</option>
+						<option value="4">ENTRETENCION</option>
+						<option value="5">SERVICIOS</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>Tipo:</td>
+					<td>
+					<select id="tipo" name="tipo">
+					</select>
+					</td>
+				</tr>
+				</table>
 				<p><input type="submit" value="Enviar"></p>
 				</form>
 			</div>

@@ -1,5 +1,8 @@
 package cl.rojasycia.gpoi.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Poi {
 	
 	private int id;
