@@ -4,9 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Hola</title>
+<title>Eliminar POI - Gestor POI</title>
+<script type="text/javascript">
+function load()
+{
+alert("Eliminación Fallida");
+}
+</script>
 </head>
-<body>
-<h1>Hola Mundo</h1>
+<body onload="load()">
+<%
+	getServletContext().getRequestDispatcher("/sitio/poi_delete.jsp").include(request, response);
+%>
 </body>
 </html>

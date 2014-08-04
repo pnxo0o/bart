@@ -4,9 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Hola</title>
+<title>Modificar Contraseña - Gestor POI</title>
+<script type="text/javascript">
+function load()
+{
+alert("Falló la modificación del nombre de usuario");
+}
+</script>
 </head>
-<body>
-<h1>Hola Mundo</h1>
+<body onload="load()">
+<%
+	getServletContext().getRequestDispatcher("/sitio/user_modify2.jsp").include(request, response);
+%>
 </body>
 </html>

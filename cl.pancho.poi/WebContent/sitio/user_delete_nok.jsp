@@ -4,17 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Login Error</title>
+<title>Modificar Contraseña - Gestor POI</title>
 <script type="text/javascript">
 function load()
 {
-alert("Error en el Usuario/Contraseña");
+alert("Contraseña incorrecta");
 }
 </script>
 </head>
 <body onload="load()">
 <%
-	getServletContext().getRequestDispatcher("/home.jsp").include(request, response);
+	getServletContext().getRequestDispatcher("/sitio/user_delete.jsp").include(request, response);
 %>
 </body>
 </html>

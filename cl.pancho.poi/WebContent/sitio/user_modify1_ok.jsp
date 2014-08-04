@@ -4,9 +4,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Hola</title>
+<title>Modificar Contraseña - Gestor POI</title>
+<script type="text/javascript">
+function load()
+{
+alert("Modificación de Contraseña Exitosa");
+}
+</script>
 </head>
-<body>
-<h1>Hola Mundo</h1>
+<body onload="load()">
+<%
+	session.invalidate();
+	getServletContext().getRequestDispatcher("/sitio/home.jsp").include(request, response);
+%>
 </body>
 </html>

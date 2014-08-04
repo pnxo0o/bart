@@ -1,0 +1,175 @@
+@charset "utf-8";
+/* CSS Document */
+/*Francisco Rojas*/
+
+body
+{
+	background-color: #FFF;
+	background-image: url(fondo.png);
+	background-repeat: repeat-x;
+	margin-top: 0px;
+}
+
+/*head site*/
+
+#header
+{
+	width: 1024px;
+	height: 180px;
+	background-image:url(resources/header-bg.jpg);
+	border-left: solid #FFF 1px;
+	border-right: solid #FFF 1px;
+	color: #FFF;
+}
+
+#head1
+{
+	width:300px;
+	height:130px;
+	float:left;
+	padding: 25px 0px 25px 0px;
+}
+
+#head2
+{
+	width:724px;
+	height:100px;
+	padding: 25px 0px 25px 0px;
+	float:left;
+}
+
+#headtexto1{
+	font-size:20px;
+	float:left;
+	text-align:left;
+	font-weight:bold;
+}
+
+/*menu site*/
+
+#menu
+{
+	width:1024px;
+	height:40px;
+	background-color: #3d3f15;
+	border-left: solid #FFF 1px;
+	border-right: solid #FFF 1px;
+}
+
+
+* {
+	font-family:sans-serif;
+	list-style:none;
+	text-decoration:none;
+	margin:0;
+	padding:0;
+}
+
+
+.nav > li {
+	float:left;
+}
+
+.nav li a {
+	background:#3d3f15;
+	color:#FFF;
+	display:block;
+
+	padding:10px 12px;
+}
+
+.nav li .flecha{
+	font-size: 9px;
+	padding-left: 6px;
+	display: none;
+}
+
+.nav li a:not(:last-child) .flecha {
+	display: inline;
+}
+
+.nav li a:hover {
+	background:#0fbfc6;
+}
+
+.nav li {
+	position:relative;
+}
+
+.nav li ul {
+	display:none;
+	position:absolute;
+	min-width:140px;
+}
+
+.nav li:hover > ul {
+	display:block;
+}
+
+.nav li ul li ul {
+	right:-140px;
+	top:0;
+}
+
+/*main site*/
+
+#main
+{
+	width:1024px;
+	height:600px;
+	background-color:#FFF;
+	border-left: solid #FFF 1px;
+	border-right: solid #FFF 1px;
+}
+
+#main1
+{
+	width:660px;
+	height:590px;
+	background-color:#CCC;
+	float:left;
+	padding: 5px 5px 5px 5px;
+}
+
+#main2
+{
+	width:344px;
+	height:590px;
+	background-color:#D8D8D8;
+	float:left;
+	padding: 5px 5px 5px 5px;
+}
+
+#main3
+{
+	width:1014px;
+	height:590px;
+	background-color:#D8D8D8;
+	float:left;
+	padding: 5px 5px 5px 5px;
+}
+
+#footer
+{
+	width:1024px;
+	height:100px;
+	background-color:#000;
+	border-left: solid #FFF 1px;
+	border-right: solid #FFF 1px;
+}
+
+#textoplomo
+{
+	text-align:left;
+	color:#CCC;
+	font-size:12px;
+	font-family:Verdana, Geneva, sans-serif;
+	padding: 5px 0px 0px 10px;
+}
+
+#contacto
+{
+	width:512px;
+	height:780px;
+	float:left;	
+}

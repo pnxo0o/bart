@@ -7,7 +7,7 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import cl.rojasycia.gpoi.model.Poi;
+import cl.rojasycia.gpoi.model.Usuario;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
@@ -29,19 +29,19 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 
-public class DownloadPOI {
+public class DownloadUsuario {
 	
-	List<Poi> listadoPoi = new ArrayList<>();
+	List<Usuario> listadoUsuario = new ArrayList<>();
 	
-	public List<Poi> setPOIDescargados(){
-		return listadoPoi;
+	public List<Usuario> setPOIDescargados(){
+		return listadoUsuario;
 	}
 
-	public DownloadPOI(){
+	public DownloadUsuario(){
 		ClientConfig config = new DefaultClientConfig();
 	    Client client = Client.create(config);
 	    WebResource service = client.resource(getBaseURI());
-	    System.out.println(service.path("rest").path("servicio").accept(MediaType.TEXT_XML).get(String.class));
+	    System.out.println(service.path("rest").path("servicio/usuariossistema").accept(MediaType.TEXT_XML).get(String.class));
 	    
 	    DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 	    domFactory.setNamespaceAware(true); 
@@ -49,44 +49,35 @@ public class DownloadPOI {
 		try {
 			builder = domFactory.newDocumentBuilder();
 			Document doc = builder.parse(new InputSource(
-					new StringReader(service.path("rest").path("servicio").accept(MediaType.TEXT_XML).get(String.class))));
+			new StringReader(service.path("rest").path("servicio/usuariossistema").accept(MediaType.TEXT_XML).get(String.class))));
 			
 			Element raiz = doc.getDocumentElement();
-			NodeList listaPoi = raiz.getElementsByTagName("poi");
+			NodeList listaPoi = raiz.getElementsByTagName("usuario");
 			
 			for(int i=0; i<listaPoi.getLength(); i++) {   
 				Node poi = listaPoi.item(i);
 				NodeList datosPoi = poi.getChildNodes();
 				
-				 Poi p = new Poi();
+				 Usuario p = new Usuario();
 				 for(int j=0; j<datosPoi.getLength(); j++){
 					 Node dato = datosPoi.item(j);
 					 
 					 if(dato.getNodeType()==Node.ELEMENT_NODE) {
-						 if(dato.getNodeName()=="id"){
+						 if(dato.getNodeName()=="idUsuario"){
 							  Node datoContenido = dato.getFirstChild();
-					          p.setId(Integer.parseInt(datoContenido.getNodeValue()));
+					          p.setIdUsuario(datoContenido.getNodeValue());
 						 }
-						 else if(dato.getNodeName()=="nombre"){
+						 else if(dato.getNodeName()=="nombreUsuario"){
 							 Node datoContenido = dato.getFirstChild();
-					         p.setNombre(datoContenido.getNodeValue());
+					         p.setNombreUsuario(datoContenido.getNodeValue());
 						 }
-						 else if(dato.getNodeName()=="tipo"){
+						 else if(dato.getNodeName()=="passUsuario"){
 							 Node datoContenido = dato.getFirstChild();
-					         p.setTipo(datoContenido.getNodeValue());
-						 }
-						 else if(dato.getNodeName()=="latitud"){
-							 Node datoContenido = dato.getFirstChild();
-					         p.setLatitud(Double.parseDouble(datoContenido.getNodeValue()));
-						 }
-						 else if(dato.getNodeName()=="longitud"){
-							 Node datoContenido = dato.getFirstChild();
-					         datoContenido.getNodeValue();
-					         p.setLongitud(Double.parseDouble(datoContenido.getNodeValue()));
+					         p.setPassUsuario(datoContenido.getNodeValue());
 						 }
 					 }
 				 }
-				 listadoPoi.add(p);
+				 listadoUsuario.add(p);
 			}
 		} catch (ParserConfigurationException e) {		
 			e.printStackTrace();
@@ -102,7 +93,7 @@ public class DownloadPOI {
 	}
 	
 	private static URI getBaseURI() {
-	    return UriBuilder.fromUri("http://localhost:8080/cl.rojasycia.tserviciosweb").build();
+	    return UriBuilder.fromUri("http://"+Config.getServer()+":8080/cl.rojasycia.tserviciosweb").build();
 	}
 	
 }

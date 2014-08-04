@@ -23,6 +23,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
 import cl.rojasycia.tserviciosweb.model.Poi;
+import cl.rojasycia.tserviciosweb.model.Usuario;
 
 
 // URL + /servicio
@@ -32,7 +33,8 @@ public class Servicio {
 	private static String pass = "postgres";
 	private static String usuario = "postgres";
   	private static String driver = "org.postgresql.Driver"; 
-  	private static int LIMITE_PUNTOS_ENTREGADOS = 30;
+  	private static String server = "localhost";
+  	private static int LIMITE_PUNTOS_ENTREGADOS = 30; //para celular
 	
 	  @Context
 	  UriInfo uriInfo;
@@ -40,11 +42,11 @@ public class Servicio {
 	  Request request;
 
 
-  // This method is called if XML is request
+  //devuelve todos los pois en xml
   @GET
   @Produces(MediaType.TEXT_XML)
-  public List<Poi> sayXMLPOI() {
-	    String connectString = "jdbc:postgresql://localhost:5432/gis?user="+usuario+"&password="+pass; 
+  public List<Poi> getPOIXML() {
+	    String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
 	    String sql;
 	    ResultSet resultado;
 	    Connection conn;
@@ -81,14 +83,13 @@ public class Servicio {
 	    	System.out.println("Error en ClassNotFound");
 	    }
 	    return null;
-
   }
 
   // Devuelve todos los pois en HTML
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String sayHtmlPOI() {
-	  String connectString = "jdbc:postgresql://localhost:5432/gis?user="+usuario+"&password="+pass; 
+  public String getPOIHTML() {
+	  String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
 	  String sql;
 	  ResultSet resultado;
 	  Connection conn;
@@ -141,8 +142,8 @@ public class Servicio {
   
   //este metodo es llamando al consultar por un poi particular segun su id
   @Path("{idpoi}")
-  public Poi getPoi(@PathParam("idpoi") String id) {
-	  	String connectString = "jdbc:postgresql://localhost:5432/gis?user="+usuario+"&password="+pass; 
+  public Poi getPoibyId(@PathParam("idpoi") String id) {
+	  	String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
 	    String sql;
 	    ResultSet resultado;
 	    Connection conn;
@@ -181,7 +182,51 @@ public class Servicio {
 	    }
 	    return null;
   }
+ 
+ //este llama a todos los poi segun su tipo ordenados por nombre poi 
+  @GET
+  @Path("categoria/{tipo}")
+  public List<Poi> getPoibyCat(@PathParam("tipo") String tipo) {
+	    String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
+	    String sql;
+	    ResultSet resultado;
+	    Connection conn;
+	    Statement sentencia;
+	    List<Poi> listadoPoi = new ArrayList<>();
+
+	    try {
+	    	Class.forName(driver);
+	    	System.out.println("class ok");
+	    	conn = DriverManager.getConnection(connectString);
+	    	System.out.println("conn ok");
+	    	sql = "SELECT idpoi as id, ST_X(the_geom) as lat, ST_Y(the_geom) as lon, nombrepoi as nombre, tipopoi as tipo FROM poi WHERE tipopoi="+tipo+" order by nombrepoi;";
+	    	System.out.println("sql ok");
+	    	sentencia = conn.createStatement();
+	    	System.out.println("sentencia -ok");
+	    	resultado = sentencia.executeQuery(sql);
+	    
+	    	while(resultado.next()){
+	    		Poi p = new Poi(resultado.getInt("id"),resultado.getDouble("lat"),resultado.getDouble("lon"), resultado.getString("nombre"), resultado.getString("tipo"));
+	    		listadoPoi.add(p);
+	    	}
+	    
+	    	resultado.close();
+	    	sentencia.close();
+	    	conn.close();
+	    
+	    	return listadoPoi;
+	            
+	    }
+	    catch(SQLException  e) {
+	    	System.out.println("Error en SQL");
+	    }
+	    catch(ClassNotFoundException e) {
+	    	System.out.println("Error en ClassNotFound");
+	    }
+	    return null;
+  }
   
+  //devuelve segun latitud, longitud y tipo
  @GET
  @Path("{lat}/{lon}/{tipo}")
  public List<Poi> getPoi(
@@ -189,7 +234,7 @@ public class Servicio {
 			@PathParam("lon") double lon, 
 			@PathParam("tipo") int tipo) {
 
-	    String connectString = "jdbc:postgresql://localhost:5432/gis?user="+usuario+"&password="+pass; 
+	    String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
 	    String sql;
 	    ResultSet resultado;
 	    Connection conn;
@@ -242,7 +287,7 @@ public class Servicio {
   @Path("max_id")
   @Produces(MediaType.TEXT_XML)
   public String getCount() {
-	  String connectString = "jdbc:postgresql://localhost:5432/gis?user="+usuario+"&password="+pass;
+	  String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass;
     String sql;
     ResultSet resultado;
     Connection conn;
@@ -296,43 +341,105 @@ public class Servicio {
       @FormParam("op") String op,
       @Context HttpServletResponse servletResponse) throws IOException {
 	  
-	  	String connectString = "jdbc:postgresql://localhost:5432/gis?user="+usuario+"&password="+pass; 
+	  	String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
 	    String sql = null;
+	    Connection conn = null;
+	    Statement sentencia = null;    
+
+	    try {
+	    	Class.forName(driver);
+	    	conn = DriverManager.getConnection(connectString);
+	    	
+	    	if(op.equals("insert")){
+	    		if(Servicio.isDouble(latitud)==false || Servicio.isDouble(latitud)==false){
+	    			return "0";
+	    	    }
+	    		else{
+	    			sql = "INSERT INTO poi (idpoi, the_geom, nombrepoi, tipopoi) VALUES ("+id+",ST_GeomFromText('POINT("+latitud+" "+longitud+")',32661),'"+nombre+"', "+tipo+")";
+	    		}
+	    	}
+	    	else if(op.endsWith("update")){
+	    		if(Servicio.isDouble(latitud)==false || Servicio.isDouble(latitud)==false){
+	    	    	return "0";
+	    	    }
+	    		else{
+	    			sql = "UPDATE poi SET the_geom=ST_GeomFromText('POINT("+latitud+" "+longitud+")',32661), nombrepoi='"+nombre+"', tipopoi='"+tipo+"' WHERE idpoi="+id+"";
+	    		}
+	    	}
+	    	else if(op.endsWith("delete")){
+	    		sql = "DELETE from poi where idpoi="+id+"";
+	    	}
+	    	
+	    	sentencia = conn.createStatement();
+	    	sentencia.executeUpdate(sql);
+	    	sentencia.close();
+	    	conn.close();
+	            
+	    }
+	    catch(SQLException  e) {
+	    	System.out.println("sql error post poi");
+	    	return "0";
+	    }
+	    catch(ClassNotFoundException e) {
+	    	System.out.println("cnf error post poi");
+	    	return "0";
+	    }
+	    System.out.println("ok post poi");
+	    return "1";
+  }
+ 
+  private static boolean isDouble(String cadena){
+		try {
+			Double.parseDouble(cadena);
+			return true;
+		} catch (NumberFormatException nfe){
+			return false;
+		}
+  }
+  
+//  private static boolean isInteger(String cadena){
+//		try {
+//			Integer.parseInt(cadena);
+//			return true;
+//		} catch (NumberFormatException nfe){
+//			return false;
+//		}
+//  }
+  
+  
+//devuelve todos los usuarios en xml
+  @GET
+  @Produces(MediaType.TEXT_XML)
+  @Path("usuariossistema")
+  public List<Usuario> getUserXML() {
+	    String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
+	    String sql;
 	    ResultSet resultado;
 	    Connection conn;
 	    Statement sentencia;
-	    
-	    System.out.println(id+""+latitud+""+longitud+""+nombre+""+tipo);
+	    List<Usuario> listadoUsuario = new ArrayList<>();
 
 	    try {
 	    	Class.forName(driver);
 	    	System.out.println("class ok");
 	    	conn = DriverManager.getConnection(connectString);
 	    	System.out.println("conn ok");
-	    	
-	    	if(op.equals("insert")){
-	    		sql = "INSERT INTO poi (idpoi, the_geom, nombrepoi, tipopoi) VALUES ("+id+",ST_GeomFromText('POINT("+latitud+" "+longitud+")',32661),'"+nombre+"', "+tipo+")";
-	    	}
-	    	else if(op.endsWith("update")){
-		    	sql = "UPDATE poi SET the_geom=ST_GeomFromText('POINT("+latitud+" "+longitud+")',32661), nombrepoi='"+nombre+"', tipopoi='"+tipo+"' WHERE idpoi="+id+"";
-	    	}
-	    	else if(op.endsWith("delete")){
-	    		sql = "DELETE from poi where idpoi="+id+"";
-	    	}
-	    	
+	    	sql = "select idusuario as id, nombreusuario as nombre, contrausuario as pass from usuario;";
 	    	System.out.println("sql ok");
 	    	sentencia = conn.createStatement();
-	    	System.out.println("sentencia ok");
+	    	System.out.println("sentencia -ok");
 	    	resultado = sentencia.executeQuery(sql);
-	    	System.out.println("resultado ok ok");
-	    	
-
-	    	System.out.println("traspaso ok");
+	    
+	    	while(resultado.next()){
+	    		Usuario p = new Usuario(resultado.getString("id"), resultado.getString("nombre"),resultado.getString("pass"));
+	    		listadoUsuario.add(p);
+	    	}
+	    
 	    	resultado.close();
 	    	sentencia.close();
 	    	conn.close();
 	    
-	    	return "1";
+	    	return listadoUsuario;
 	            
 	    }
 	    catch(SQLException  e) {
@@ -341,8 +448,57 @@ public class Servicio {
 	    catch(ClassNotFoundException e) {
 	    	System.out.println("Error en ClassNotFound");
 	    }
-	    return "0";
+	    return null;
   }
- 
+  
+  @POST
+  @Path("usuariossistemapost")
+  @Produces(MediaType.TEXT_HTML)
+  @Consumes(MediaType.TEXT_XML)
+  public String newUser(
+	  @FormParam("idusuario") String id,
+      @FormParam("nombreusuario") String nombre,
+      @FormParam("contrausuario") String pass,
+      @FormParam("operacion") String op,
+      @Context HttpServletResponse servletResponse) throws IOException {
+	  
+	  	String connectString = "jdbc:postgresql://"+server+":5432/gis?user="+usuario+"&password="+pass; 
+	    String sql = null;
+	    Connection conn;
+	    Statement sentencia = null;    
+
+	    try {
+	    	Class.forName(driver);
+	    	System.out.println("class ok");
+	    	conn = DriverManager.getConnection(connectString);
+	    	System.out.println("conn ok");
+	    	
+	    	if(op.equals("insert")){
+	    		sql = "insert into usuario values('"+id+"','"+nombre+"','"+pass+"');";
+	    	}
+	    	else if(op.endsWith("update1")){
+	    		sql = "update usuario set contrausuario='"+pass+"' WHERE idusuario='"+id+"'";
+	    	}
+	    	else if(op.endsWith("update2")){
+	    		sql = "update usuario set nombreusuario='"+nombre+"' WHERE idusuario='"+id+"'";
+	    	}
+	    	else if(op.endsWith("delete")){
+	    		sql = "DELETE from usuario WHERE idusuario='"+id+"'";
+	    	}
+
+	    	sentencia = conn.createStatement();
+	    	sentencia.executeUpdate(sql);
+	    	sentencia.close();
+	    	conn.close();
+	    }
+	    catch(SQLException  e) {
+	    	return "0";
+	    }
+	    catch(ClassNotFoundException e) {
+	    	return "0";
+	    }
+	    return "1";
+  }
+  
   
 } 
