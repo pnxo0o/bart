@@ -187,7 +187,7 @@ catch(NullPointerException e){
 	<li>
 		<a href="#">Usuarios<span class="flecha">&#9660;</span></a>
 		<ul>
-			<li><a href="user_add.jsp.jsp">Añadir Usuario<span class="flecha">&#9660;</span></a></li>
+			<li><a href="user_add.jsp">Añadir Usuario<span class="flecha">&#9660;</span></a></li>
 			<li><a href="user_modify1.jsp">Modificar Mi Contraseña<span class="flecha">&#9660;</span></a></li>
 			<li><a href="user_modify2.jsp">Modificar Mi Nombre<span class="flecha">&#9660;</span></a></li>
 			<li><a href="user_delete.jsp">Eliminar Mi Usuario<span class="flecha">&#9660;</span></a></li>
@@ -202,6 +202,7 @@ catch(NullPointerException e){
 	<div id="main2">
 	<h2>Añadir Lugares</h2>
 	Seleccione un punto en el mapa y complete el formulario para añadir un nuevo punto de interés
+	<br/>
 	<form action="poi_add_action.jsp" method="post" onsubmit="return validardatos(this);">
 		<table border="0" align="center">
 		<tr>

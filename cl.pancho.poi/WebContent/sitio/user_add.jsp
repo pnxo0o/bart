@@ -12,17 +12,17 @@
 	function validardatos(formObj) {
 
         if ( (formObj.idusuario.value) == "") { 
-        	alert ("No indicó la latitud");
+        	alert ("No indicó el identificador del nuevo usuario");
         	return false;
         }
         
         if ( (formObj.nombreusuario.value) == "") { 
-            alert ("No indicó la longitud");
+            alert ("No indicó el nombre del nuevo usuario");
             return false;
         }
         
         if ( (formObj.passusuario.value) == "") { 
-            alert ("No indicó el nombre del punto de interés");
+            alert ("No indicó la contraseña del nuevo usuario");
             return false;
         }
 
@@ -80,6 +80,10 @@ catch(NullPointerException e){
 </div>
 <div id="main">
 	<div id="main3">
+		<h2>Añadir Nuevo Usuario</h2>
+		Llene el formulario con los siguientes datos y cree un nuevo administrador para el sistema:
+		<br/>
+		<br>
 		<form action="user_add_action.jsp" method="post" onsubmit="return validardatos(this);">
 		<table border="0" align="center">
 		<tr>

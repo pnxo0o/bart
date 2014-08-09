@@ -7,6 +7,22 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Modificar Usuario - Gestor POI</title>
 	<link href="main.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+	function validardatos(formObj) {
+
+        if ( (formObj.nnombre.value) == "") { 
+        	alert ("No indicó el nuevo nombre");
+        	return false;
+        }
+        
+        if ( (formObj.passw.value) == "") { 
+            alert ("No indicó su contraseña");
+            return false;
+        }
+    }
+	
+	</script>
 </head>
 <body>
 <% 
@@ -59,6 +75,10 @@ catch(NullPointerException e){
 <div id="main">
 	<div id="main3">
 	<form action="user_modify2_action.jsp" method="post" onsubmit="return validardatos(this);">
+		<h2>Modificar Mi Nombre</h2>
+		Ingrese su nuevo nombre desde aquí, con el resultado satisfactorio será desconectado del sistema:
+		<br/>
+		<br>
 		<table border="0" align="center">
 		<tr>
 			<td>Nuevo Nombre:</td>
@@ -69,7 +89,7 @@ catch(NullPointerException e){
 			<td><input type="password" id="passw" name="passw" maxlength="8"></td>
 		</tr>
 		</table>
-		<p><input type="submit" value="Modificar Contraseña"></p>
+		<p><input type="submit" value="Modificar Mi Nombre"></p>
 	</form>
 	</div>
 </div>

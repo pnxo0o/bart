@@ -7,6 +7,28 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Modificar Contraseña - Gestor POI</title>
 	<link href="main.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+	function validardatos(formObj) {
+
+        if ( (formObj.oldpass.value) == "") { 
+        	alert ("No indicó su contraseña");
+        	return false;
+        }
+        
+        if ( (formObj.newpass1.value) == "") { 
+            alert ("No indicó la nueva contraseña");
+            return false;
+        }
+        
+        if ( (formObj.newpass2.value) == "") { 
+            alert ("No repitió la nueva contraseña");
+            return false;
+        }
+
+    }
+	
+	</script>
 </head>
 <body>
 <% 
@@ -59,6 +81,10 @@ catch(NullPointerException e){
 <div id="main">
 	<div id="main3">
 	<form action="user_modify1_action.jsp" method="post" onsubmit="return validardatos(this);">
+		<h2>Modificar Mi Contraseña</h2>
+		Ingrese su nueva contraseña desde aquí, con el resultado satisfactorio será desconectado del sistema:
+		<br/>
+		<br>
 		<table border="0" align="center">
 		<tr>
 			<td>Antigua Contraseña:</td>
@@ -73,7 +99,7 @@ catch(NullPointerException e){
 			<td><input type="password" id="newpass2" name="newpass2" maxlength="8"></td>
 		</tr>
 		</table>
-		<p><input type="submit" value="Añadir Nuevo Usuario"></p>
+		<p><input type="submit" value="Modificar Mi Contraseña"></p>
 	</form>
 	</div>
 </div>

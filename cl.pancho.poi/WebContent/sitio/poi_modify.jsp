@@ -123,11 +123,21 @@
                 type: "GET",
                 url: "http://localhost:8080/cl.rojasycia.tserviciosweb/rest/servicio/categoria/"+$(this).val(),
                 dataType: "xml",
-                success: function (xml) {   
+                success: function (xml) { 
+                	
                     $("#lugar").append("<option value=\"0\"></option>");
+                    
+                  
+                    var something=$(xml).find('poi');
+
+                    if( !something.length){
+						alert ("No se encontraron lugares");
+                    }
+                    	
                     $(xml).find('poi').each(function () {
                         var nombre = $(this).find('nombre').text();
                         var id = $(this).find('id').text();
+                        
                          $("#lugar").append("<option value=\""+id+"\">"+nombre+"</option>");
 
 	                    });
@@ -231,7 +241,8 @@ catch(NullPointerException e){
 <div id="main">
 	<div id="main2">
 	<h2>Modificar Punto de Interés</h2>
-	Busque el lugar a modificar segun la Categoria:
+	Busque el lugar a modificar segun la Categoria y Tipo:
+	<br/>
 	<form action="poi_modify_action.jsp" method="post" onsubmit="return validardatos(this);">
 		<table border="0" align="center">
 		<tr>

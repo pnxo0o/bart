@@ -118,6 +118,13 @@
             dataType: "xml",
             success: function (xml) {   
                 $("#lugar").append("<option value=\"0\"></option>");
+                
+                var something=$(xml).find('poi');
+                
+                if( !something.length){
+					alert ("No se encontraron lugares");
+                }
+                
                 $(xml).find('poi').each(function () {
                     var nombre = $(this).find('nombre').text();
                     var id = $(this).find('id').text();
@@ -208,8 +215,9 @@ catch(NullPointerException e){
 </div>
 <div id="main">
 	<div id="main2">
-		<h2>Modificar Punto de Interés</h2>
-	Busque el lugar a modificar segun la Categoria:
+		<h2>Eliminar Punto de Interés</h2>
+	Busque el lugar a elimiar segun la Categoria y Tipo:
+	<br/>
 	<form action="poi_delete_action.jsp" method="post" onsubmit="return validardatos(this);">
 		<table border="0" align="center">
 		<tr>
