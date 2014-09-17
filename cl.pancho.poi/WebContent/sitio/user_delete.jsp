@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Inicio</title>
+	<title>Eliminar Usuario</title>
 	<link href="main.css" rel="stylesheet" type="text/css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
@@ -69,7 +69,7 @@ response.sendRedirect("logout.jsp");
 <div id="main">
 	<div id="main3">
 	<form action="user_delete_action.jsp" method="post" onsubmit="return validardatos(this);">
-			<h2>Modificar Mi Contraseña</h2>
+			<h2>Eliminar Mi Cuenta</h2>
 		Si elimina su usuario no podra volver a entrar al sistema
 		<br/>
 		<br>
